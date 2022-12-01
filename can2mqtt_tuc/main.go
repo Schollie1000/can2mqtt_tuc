@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt" // printfoo
-	C2M "github.com/schollie1000/can2mqtt_tuc"
+	C2M "github.com/Schollie1000/can2mqtt_tuc"
 	"os" // args
 )
 
