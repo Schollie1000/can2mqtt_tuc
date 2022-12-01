@@ -250,7 +250,7 @@ func int322ascii(payload []byte) string {
 	if len(payload) != 4 {
 		return "Err in CAN-Frame, data must be 4 bytes."
 	}
-	data := binary.LittleEndian.int32(payload)
+	data := binary.LittleEndian.Int32(payload)
 	return strconv.FormatUint(uint64(data), 10)
 }
 
@@ -258,7 +258,7 @@ func ascii2int32(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint32(tmp)
 	a := make([]byte, 4)
-	binary.LittleEndian.Putint32(a, number)
+	binary.LittleEndian.PutInt32(a, number)
 	return a
 }
 
