@@ -252,7 +252,7 @@ func int322ascii(payload []byte) string {
 	}
 	data := binary.LittleEndian.Uint32(payload)
 	data2 := int32(data)
-	return strconv.FormatInt(uint64(data), 10)
+	return strconv.FormatInt(uint64(data2), 10)
 }
 
 func ascii2int32(payload string) []byte {
