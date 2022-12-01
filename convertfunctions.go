@@ -242,6 +242,29 @@ func ascii2uint32(payload string) []byte {
 
 //########################################################################
 //######################################################################
+//#			INT322ASCII				       #
+//######################################################################
+// int322ascii takes 4 bytes and returns a string with a numeric
+// decimal interpretation of the found data as ascii-string
+func int322ascii(payload []byte) string {
+	if len(payload) != 4 {
+		return "Err in CAN-Frame, data must be 4 bytes."
+	}
+	data := binary.LittleEndian.int32(payload)
+	return strconv.FormatUint(uint64(data), 10)
+}
+
+func ascii2int32(payload string) []byte {
+	tmp, _ := strconv.Atoi(payload)
+	number := uint32(tmp)
+	a := make([]byte, 4)
+	binary.LittleEndian.Putint32(a, number)
+	return a
+}
+
+
+//########################################################################
+//######################################################################
 //#			UINT642ASCII				       #
 //######################################################################
 // uint642ascii takes 8 bytes and returns a string with a numeric
@@ -261,6 +284,31 @@ func ascii2uint64(payload string) []byte {
 	binary.LittleEndian.PutUint64(a, number)
 	return a
 }
+
+//########################################################################
+//######################################################################
+//#			double Float2ASCII				       #
+//######################################################################
+// Drillbotics double float msg -> two 32bit floats 
+// decimal interpretation of the found data as ascii-string
+func dfloat2ascii(payload []byte) string {
+	if len(payload) != 8 {
+		return "Err in CAN-Frame, data must be 8 bytes."
+	}
+	data := binary.LittleEndian.Uint64(payload)
+	return strconv.FormatUint(uint64(data), 10)
+}
+
+func ascii2dfloat(payload string) []byte {
+	tmp, _ := strconv.Atoi(payload)
+	number := uint64(tmp)
+	a := make([]byte, 8)
+	binary.LittleEndian.PutUint64(a, number)
+	return a
+}
+
+
+
 
 //########################################################################
 //######################################################################
