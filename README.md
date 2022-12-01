@@ -1,6 +1,6 @@
-# can2mqtt
+# can2mqtt_tuc
 
-
+Modified for Drillbotics 
 can2mqtt is a small piece of software written in Go. Its purpose is to be a bridge between a CAN-Bus and a MQTT-Broker. Those are completely different worlds but they have similiaritys in the way they are built. I think i don't have to speak about the differences so i will just pick up the similiarities: In the CAN-world you have so called CAN-Frames. Each CAN-Frame can contain up to eight bytes of payload and CAN-Frame has an ID. In the MQTT-world you have topics and messages. Each message has a specific topic. As you can see it should be possible to map CAN-IDs to MQTT-Topics and their respective payload to messages. That's what this little programm does.
 
 ## Installation

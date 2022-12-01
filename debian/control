@@ -1,4 +1,4 @@
-Source: can2mqtt
+Source: can2mqtt_tuc
 Section: devel
 Priority: optional
 Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
@@ -14,7 +14,7 @@ Vcs-Git: https://salsa.debian.org/go-team/packages/can2mqtt.git
 XS-Go-Import-Path: github.com/gbeine/can2mqtt
 Testsuite: autopkgtest-pkg-go
 
-Package: can2mqtt
+Package: can2mqtt_tuc
 Architecture: any
 Built-Using: ${misc:Built-Using}
 Depends: ${misc:Depends},
