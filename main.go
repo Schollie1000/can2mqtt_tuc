@@ -1,4 +1,4 @@
-package can2mqtt
+package can2mqtt_tuc
 
 import (
 	"bufio"        // Reader
