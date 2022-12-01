@@ -1,4 +1,4 @@
-module github.com/schollie100/can2mqtt_tuc
+module github.com/schollie1000/can2mqtt_tuc
 
 go 1.18
 
