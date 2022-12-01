@@ -251,7 +251,8 @@ func int322ascii(payload []byte) string {
 		return "Err in CAN-Frame, data must be 4 bytes."
 	}
 	data := binary.LittleEndian.Uint32(payload)
-	return strconv.FormatInt(int32(data), 10)
+	data2 := int32(data)
+	return strconv.FormatInt(uint64(data), 10)
 }
 
 func ascii2int32(payload string) []byte {
