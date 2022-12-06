@@ -36,7 +36,7 @@ func main() {
 
 // help function (obvious...)
 func printHelp() {
-	fmt.Printf("welcome to the CAN2MQTT bridge!\n\n")
+	fmt.Printf("welcome to the CAN2MQTT Drillbotics edit bridge!\n\n")
 	fmt.Printf("Usage: can2mqtt [-f <file>] [-c <CAN-Interface>] [-m <MQTT-Connect>] [-v] [-h]\n")
 	fmt.Printf("<file>: a can2mqtt.csv file\n")
 	fmt.Printf("<CAN-Interface>: a CAN-Interface e.g. can0\n")
