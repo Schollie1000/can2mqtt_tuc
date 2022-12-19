@@ -4,9 +4,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	CAN "github.com/brendoncarroll/go-can"
+	"math"
 	"strconv"
 	"strings"
+
+	CAN "github.com/brendoncarroll/go-can"
 )
 
 // convert2CAN does the following:
@@ -189,9 +191,9 @@ func ascii2bytes(payload string) ([8]byte, uint32) {
 	return returner, i
 }
 
-//######################################################################
-//#			UINT82ASCII				       #
-//######################################################################
+// ######################################################################
+// #			UINT82ASCII				       #
+// ######################################################################
 // uint82ascii takes exactly one byte and returns a string with a
 // numeric decimal interpretation of the found data
 func uint82ascii(payload byte) string {
@@ -202,9 +204,9 @@ func ascii2uint8(payload string) byte {
 	return ascii2uint16(payload)[0]
 }
 
-//######################################################################
-//#			UINT162ASCII				       #
-//######################################################################
+// ######################################################################
+// #			UINT162ASCII				       #
+// ######################################################################
 // uint162ascii takes 2 bytes and returns a string with a numeric
 // decimal interpretation of the found data as ascii-string
 func uint162ascii(payload []byte) string {
@@ -223,10 +225,10 @@ func ascii2uint16(payload string) []byte {
 	return a
 }
 
-//########################################################################
-//######################################################################
-//#			UINT322ASCII				       #
-//######################################################################
+// ########################################################################
+// ######################################################################
+// #			UINT322ASCII				       #
+// ######################################################################
 // uint322ascii takes 4 bytes and returns a string with a numeric
 // decimal interpretation of the found data as ascii-string
 func uint322ascii(payload []byte) string {
@@ -245,17 +247,17 @@ func ascii2uint32(payload string) []byte {
 	return a
 }
 
-//########################################################################
-//######################################################################
-//#			INT322ASCII				       #
-//######################################################################
+// ########################################################################
+// ######################################################################
+// #			INT322ASCII				       #
+// ######################################################################
 // int322ascii takes 4 bytes and returns a string with a numeric
 // decimal interpretation of the found data as ascii-string
 func int322ascii(payload []byte) string {
 	if len(payload) != 4 {
 		return "Err in CAN-Frame, data must be 4 bytes."
 	}
-	data := binary.LittleEndian.Uint32(payload)
+	data := binary.BigEndian.Uint32(payload)
 	data2 := int32(data)
 	return strconv.FormatInt(int64(data2), 10)
 }
@@ -264,15 +266,14 @@ func ascii2int32(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint32(tmp)
 	a := make([]byte, 4)
-	binary.LittleEndian.PutUint32(a, number)
+	binary.BigEndian.PutUint32(a, number)
 	return a
 }
 
-
-//########################################################################
-//######################################################################
-//#			UINT642ASCII				       #
-//######################################################################
+// ########################################################################
+// ######################################################################
+// #			UINT642ASCII				       #
+// ######################################################################
 // uint642ascii takes 8 bytes and returns a string with a numeric
 // decimal interpretation of the found data as ascii-string
 func uint642ascii(payload []byte) string {
@@ -295,31 +296,32 @@ func ascii2uint64(payload string) []byte {
 //######################################################################
 //#			double Float2ASCII				       #
 //######################################################################
-// Drillbotics double float msg -> two 32bit floats 
+// Drillbotics double float msg -> two 32bit floats
 // decimal interpretation of the found data as ascii-string
+
 func dfloat2ascii(payload []byte) string {
-	if len(payload) != 8 {
+	if len(payload) != 4 {
 		return "Err in CAN-Frame, data must be 8 bytes."
 	}
-	data := binary.LittleEndian.Uint64(payload)
-	return strconv.FormatUint(uint64(data), 10)
+	data := binary.LittleEndian.Uint32(payload)
+	float := math.Float32frombits(data)
+
+	return strconv.FormatFloat(float64(float), 'f', 5, 32)
 }
 
 func ascii2dfloat(payload string) []byte {
-	tmp, _ := strconv.Atoi(payload)
-	number := uint64(tmp)
-	a := make([]byte, 8)
-	binary.LittleEndian.PutUint64(a, number)
+	tmp, _ := strconv.ParseFloat(payload, 32)
+	tmp2 := float32(tmp)
+	number := math.Float32bits(tmp2)
+	a := make([]byte, 4)
+	binary.LittleEndian.PutUint32(a, number)
 	return a
 }
 
-
-
-
-//########################################################################
-//######################################################################
-//#             bytecolor2colorcode
-//######################################################################
+// ########################################################################
+// ######################################################################
+// #             bytecolor2colorcode
+// ######################################################################
 // bytecolor2colorcode is a convertmode that converts between the binary
 // 3 byte representation of a color and a string representation of a color
 // as we know it (for example in html #00ff00 is green)
