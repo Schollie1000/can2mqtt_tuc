@@ -51,6 +51,16 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[2] = tmp[2]
 		data[3] = tmp[3]
 		len = 8
+	} else if convertMethod == "int322ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode ascii2int32(reverse of %s)\n", convertMethod)
+		}
+		tmp := ascii2int32(payload)
+		data[0] = tmp[0]
+		data[1] = tmp[1]
+		data[2] = tmp[2]
+		data[3] = tmp[3]
+		len = 8
 	} else if convertMethod == "uint642ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint64(reverse of %s)\n", convertMethod)
