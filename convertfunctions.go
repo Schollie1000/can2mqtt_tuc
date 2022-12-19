@@ -32,7 +32,7 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint8 (reverse of %s)\n", convertMethod)
 		}
 		data[0] = ascii2uint8(payload)
-		len = 1
+		len = 8
 	} else if convertMethod == "uint162ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint16(reverse of %s)\n", convertMethod)
@@ -40,7 +40,7 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		tmp := ascii2uint16(payload)
 		data[0] = tmp[0]
 		data[1] = tmp[1]
-		len = 2
+		len = 8
 	} else if convertMethod == "uint322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint32(reverse of %s)\n", convertMethod)
@@ -50,7 +50,7 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[1] = tmp[1]
 		data[2] = tmp[2]
 		data[3] = tmp[3]
-		len = 4
+		len = 8
 	} else if convertMethod == "uint642ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint64(reverse of %s)\n", convertMethod)
@@ -81,27 +81,19 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[6] = tmp[2]
 		data[7] = tmp[3]
 		len = 8
-	} else if convertMethod == "bytecolor2colorcode" {
+	} else if convertMethod == "float2ascii" {
 		if dbg {
-			fmt.Printf("convertfunctions: using convertmode colorcode2bytecolor(reverse of %s)\n", convertMethod)
+			fmt.Printf("convertfunctions: using convertmode ascii22uint32(reverse of %s)\n", convertMethod)
 		}
-		tmp := colorcode2bytecolor(payload)
+		//nums := strings.Split(payload, " ")
+		tmp := ascii2dfloat(payload)
 		data[0] = tmp[0]
 		data[1] = tmp[1]
 		data[2] = tmp[2]
-		len = 3
-	} else if convertMethod == "pixelbin2ascii" {
-		if dbg {
-			fmt.Printf("convertfunctions: using convertmode ascii2pixelbin(reverse of %s)\n", convertMethod)
-		}
-		num_and_color := strings.Split(payload, " ")
-		bin_num := ascii2uint8(num_and_color[0])
-		tmp := colorcode2bytecolor(num_and_color[1])
-		data[0] = byte(bin_num)
-		data[1] = tmp[0]
-		data[2] = tmp[1]
-		data[3] = tmp[2]
-		len = 4
+		data[3] = tmp[3]
+
+		len = 8
+
 	} else {
 		if dbg {
 			fmt.Printf("convertfunctions: convertmode %s not found. using fallback none\n", convertMethod)
@@ -145,6 +137,11 @@ func convert2MQTT(id int, length int, payload [8]byte) string {
 			fmt.Printf("convertfunctions: db int32  \n")
 		}
 		return int322ascii(payload[0:4])
+	} else if convertMethod == "float2ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: db float  \n")
+		}
+		return dfloat2ascii(payload[0:4])
 	} else if convertMethod == "uint642ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode uint642ascii\n")
