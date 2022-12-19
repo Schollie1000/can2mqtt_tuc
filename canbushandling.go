@@ -4,9 +4,10 @@ package can2mqtt_tuc
 
 import (
 	"fmt"
-	CAN "github.com/brendoncarroll/go-can"
 	"log"
 	"sync"
+
+	CAN "github.com/brendoncarroll/go-can"
 )
 
 var cb *CAN.CANBus      // our CANBus pointer
