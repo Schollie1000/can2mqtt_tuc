@@ -75,6 +75,38 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[6] = tmp[6]
 		data[7] = tmp[7]
 		len = 8
+
+	} else if convertMethod == "setup2floats" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode setup2floats %s)\n", convertMethod)
+		}
+		tmp := setup2floats(payload)
+		data[0] = tmp[0]
+		data[1] = tmp[1]
+		data[2] = tmp[2]
+		data[3] = tmp[3]
+		data[4] = tmp[4]
+		data[5] = tmp[5]
+		data[6] = tmp[6]
+		data[7] = tmp[7]
+		len = 8
+
+	} else if convertMethod == "setup2motor" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode motor einstellung %s)\n", convertMethod)
+		}
+		nums := strings.Split(payload, " ")
+		tmp := ascii2int16(nums[0])
+		data[0] = tmp[0]
+		data[1] = tmp[1]
+		tmp = ascii2int16(nums[1])
+		data[2] = tmp[0]
+		data[3] = tmp[1]
+		tmp = ascii2int16(nums[2])
+		data[4] = tmp[0]
+		data[5] = tmp[1]
+		len = 8
+
 	} else if convertMethod == "2uint322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii22uint32(reverse of %s)\n", convertMethod)
@@ -165,6 +197,11 @@ func convert2MQTT(id int, length int, payload [8]byte) string {
 			fmt.Printf("convertfunctions: using convertmode 2uint322ascii\n")
 		}
 		return uint322ascii(payload[0:4]) + " " + uint322ascii(payload[4:8])
+	} else if convertMethod == "setup2motor" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode setup2motor\n")
+		}
+		return int162ascii(payload[0:2]) + " " + int162ascii(payload[2:4]) + " " + int162ascii(payload[4:6])
 	} else if convertMethod == "pixelbin2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode pixelbin2ascii\n")
@@ -351,3 +388,51 @@ func colorcode2bytecolor(payload string) []byte {
 }
 
 //########################################################################
+
+// drilllbotics setup 2 floats
+
+func setup2floats(payload string) []byte {
+	nums := strings.Split(payload, " ")
+	tmp_0, _ := strconv.ParseFloat(nums[0], 32)
+	tmp_0f := float32(tmp_0)
+
+	tmp_1, _ := strconv.ParseFloat(nums[1], 32)
+	tmp_1f := float32(tmp_1)
+
+	number_0 := math.Float32bits(tmp_0f)
+	number_1 := math.Float32bits(tmp_1f)
+
+	a_0 := make([]byte, 4)
+	a_1 := make([]byte, 4)
+	a := make([]byte, 8)
+	binary.LittleEndian.PutUint32(a_0, number_0)
+	binary.LittleEndian.PutUint32(a_1, number_1)
+
+	a[0] = a_0[0]
+	a[1] = a_0[1]
+	a[2] = a_0[2]
+	a[3] = a_0[3]
+	a[4] = a_1[0]
+	a[5] = a_1[1]
+	a[6] = a_1[2]
+	a[7] = a_1[3]
+
+	return a
+}
+
+func ascii2int16(payload string) []byte {
+	tmp, _ := strconv.Atoi(payload)
+	number := uint16(tmp)
+	a := make([]byte, 4)
+	binary.BigEndian.PutUint16(a, number)
+	return a
+}
+
+func int162ascii(payload []byte) string {
+	if len(payload) != 2 {
+		return "Err in CAN-Frame, data must be 2 bytes."
+	}
+	data := binary.BigEndian.Uint16(payload)
+	data2 := int16(data)
+	return strconv.FormatInt(int64(data2), 10)
+}
