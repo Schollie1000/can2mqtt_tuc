@@ -423,7 +423,7 @@ func setup2floats(payload string) []byte {
 func ascii2int16(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint16(tmp)
-	a := make([]byte, 4)
+	a := make([]byte, 2)
 	binary.BigEndian.PutUint16(a, number)
 	return a
 }
