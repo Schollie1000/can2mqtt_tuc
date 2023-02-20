@@ -1,14 +1,26 @@
+
 # can2mqtt_tuc
 
 Modified for Drillbotics 
 can2mqtt is a small piece of software written in Go. Its purpose is to be a bridge between a CAN-Bus and a MQTT-Broker. Those are completely different worlds but they have similiaritys in the way they are built. I think i don't have to speak about the differences so i will just pick up the similiarities: In the CAN-world you have so called CAN-Frames. Each CAN-Frame can contain up to eight bytes of payload and CAN-Frame has an ID. In the MQTT-world you have topics and messages. Each message has a specific topic. As you can see it should be possible to map CAN-IDs to MQTT-Topics and their respective payload to messages. That's what this little programm does.
 
 ## Installation
+First install can utils
+
+sudo nano /boot/config.txt
+Add this line to the file:
+
+dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25,spimaxfrequency=2000000
+
+https://crycode.de/can-bus-am-raspberry-pi
+
+https://www.e-tinkers.com/2019/06/better-way-to-install-golang-go-on-raspberry-pi/
+
 You need to have go installed. After that you should be able to get can2mqtt to run with the following commands:
 ```
 $ mkdir ~/go
 $ export GOPATH=~/go
-$ go install github.com/c3re/can2mqtt/can2mqtt@latest
+$ go install github.com/schollie1000/can2mqtt_tuc/can2mqtt_tuc@latest
 ```
 After that you should have a runnable binary under $GOPATH/bin/ called can2mqtt.
  
@@ -58,3 +70,4 @@ This one is a bit special but all it does is that it takes 8 bytes from the CAN-
 Converts an bytearray of 3 bytes to hexadecimal colorcode
 ### pixelbin2ascii
 This mode was designed to adress colorized pixels. MQTT-wise you can insert a string like "<0-255> #RRGGBB" wich will be converted to 4 byte on the CAN-BUS the first byte will be the number of the LED 0-255 and bytes 1, 2, 3 are the color of red, green and blue.
+
