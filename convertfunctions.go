@@ -123,6 +123,7 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[6] = tmp[2]
 		data[7] = tmp[3]
 		len = 8
+
 	} else if convertMethod == "float2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii22uint32(reverse of %s)\n", convertMethod)
@@ -197,6 +198,11 @@ func convert2MQTT(id int, length int, payload [8]byte) string {
 			fmt.Printf("convertfunctions: using convertmode 2uint322ascii\n")
 		}
 		return uint322ascii(payload[0:4]) + " " + uint322ascii(payload[4:8])
+	} else if convertMethod == "clock2ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: Clock pulse\n")
+		}
+		return uint322ascii(payload[0:4]) + ":" + uint322ascii(payload[4:8])
 	} else if convertMethod == "setup2motor" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode setup2motor\n")
