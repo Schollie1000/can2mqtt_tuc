@@ -161,79 +161,79 @@ func convert2MQTT(id int, length int, payload [8]byte) []string {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode none\n")
 		}
-		retstr[0] = bytes2ascii(uint32(length), payload)
+		retstr = append(retstr, bytes2ascii(uint32(length), payload))
 		return retstr
 	} else if convertMethod == "uint82ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode uint82ascii\n")
 		}
-		retstr[0] = uint82ascii(payload[0])
+		retstr = append(retstr, uint82ascii(payload[0]))
 		return retstr
 	} else if convertMethod == "uint162ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode uint162ascii\n")
 		}
-		retstr[0] = uint162ascii(payload[0:2])
+		retstr = append(retstr, uint162ascii(payload[0:2]))
 		return retstr
 	} else if convertMethod == "uint322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode uint322ascii\n")
 		}
-		retstr[0] = uint322ascii(payload[0:4])
+		retstr = append(retstr, uint322ascii(payload[0:4]))
 		return retstr
 	} else if convertMethod == "int322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: db int32  \n")
 		}
-		retstr[0] = int322ascii(payload[0:4])
+		retstr = append(retstr, int322ascii(payload[0:4]))
 		return retstr
 	} else if convertMethod == "float2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: db float  \n")
 		}
-		retstr[0] = dfloat2ascii(payload[0:4])
+		retstr = append(retstr, dfloat2ascii(payload[0:4]))
 		return retstr
 	} else if convertMethod == "uint642ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode uint642ascii\n")
 		}
-		retstr[0] = uint642ascii(payload[0:8])
+		retstr = append(retstr, uint642ascii(payload[0:8]))
 		return retstr
 	} else if convertMethod == "2uint322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode 2uint322ascii\n")
 		}
-		retstr[0] = uint322ascii(payload[0:4]) + " " + uint322ascii(payload[4:8])
+		retstr = append(retstr, uint322ascii(payload[0:4])+" "+uint322ascii(payload[4:8]))
 		return retstr
 	} else if convertMethod == "clock2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: Clock pulse\n")
 		}
-		retstr[0] = uint322ascii(payload[0:4]) + ":" + uint322ascii(payload[4:8])
+		retstr = append(retstr, uint322ascii(payload[0:4])+":"+uint322ascii(payload[4:8]))
 		return retstr
 	} else if convertMethod == "setup2motor" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode setup2motor\n")
 		}
-		retstr[0] = int162ascii(payload[0:2]) + " " + int162ascii(payload[2:4]) + " " + int162ascii(payload[4:6])
+		retstr = append(retstr, int162ascii(payload[0:2])+" "+int162ascii(payload[2:4])+" "+int162ascii(payload[4:6]))
 		return retstr
 	} else if convertMethod == "pixelbin2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode pixelbin2ascii\n")
 		}
-		retstr[0] = uint82ascii(payload[0]) + " " + bytecolor2colorcode(payload[1:4])
+		retstr = append(retstr, uint82ascii(payload[0])+" "+bytecolor2colorcode(payload[1:4]))
 		return retstr
 	} else if convertMethod == "bytecolor2colorcode" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode bytecolor2colorcode\n")
 		}
-		retstr[0] = bytecolor2colorcode(payload[0:2])
+		retstr = append(retstr, bytecolor2colorcode(payload[0:2]))
 		return retstr
 	} else {
 		if dbg {
 			fmt.Printf("convertfunctions: convertmode %s not found. using fallback none\n", convertMethod)
 		}
-		retstr[0] = bytes2ascii(uint32(length), payload)
+		retstr = append(retstr, bytes2ascii(uint32(length), payload))
 		return retstr
 	}
 }
