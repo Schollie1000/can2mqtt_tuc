@@ -18,7 +18,7 @@ import (
 type can2mqtt struct {
 	canId      int
 	convMethod string
-	mqttTopic  string
+	mqttTopic  []string
 }
 
 var can2mqttPairs []can2mqtt           // representation of can2mqtt.csv
@@ -100,8 +100,15 @@ func readC2MPFromFile(filename string) {
 		if isInSlice(i, record[2]) {
 			panic("main: each ID and each topic is only allowed once!")
 		}
-		can2mqttPairs = append(can2mqttPairs, can2mqtt{i, record[1], record[2]})
-		mqttSubscribe(record[2])
+
+		var tmp_can2mqtt can2mqtt //{i, record[1], record[2]}
+
+		tmp_can2mqtt.canId = i
+		tmp_can2mqtt.convMethod = record[1]
+		tmp_can2mqtt.mqttTopic = splitString(record[2])
+
+		can2mqttPairs = append(can2mqttPairs, tmp_can2mqtt)
+		mqttSubscribe(tmp_can2mqtt.mqttTopic[0])
 		canSubscribe(uint32(i))
 	}
 	if dbg {
@@ -113,10 +120,30 @@ func readC2MPFromFile(filename string) {
 	}
 }
 
+func splitString(input string) []string {
+	result := []string{}
+	current := ""
+
+	for _, char := range input {
+		if char == '&' {
+			result = append(result, current)
+			current = ""
+		} else {
+			current += string(char)
+		}
+	}
+
+	if current != "" {
+		result = append(result, current)
+	}
+
+	return result
+}
+
 // check function to check if a topic or an ID is in the slice
 func isInSlice(canId int, mqttTopic string) bool {
 	for _, c2mp := range can2mqttPairs {
-		if c2mp.canId == canId || c2mp.mqttTopic == mqttTopic {
+		if c2mp.canId == canId || c2mp.mqttTopic[0] == mqttTopic {
 			if dbg {
 				fmt.Printf("main: The ID %d or the Topic %s is already in the list!\n", canId, mqttTopic)
 			}
@@ -127,20 +154,21 @@ func isInSlice(canId int, mqttTopic string) bool {
 }
 
 // get the corresponding topic for an ID
-func getTopic(canId int) string {
+func getTopic(canId int) []string {
+	result := []string{"-1"}
 	for _, c2mp := range can2mqttPairs {
 		if c2mp.canId == canId {
 			return c2mp.mqttTopic
 		}
 	}
 	// Fehlerfall
-	return "-1"
+	return result
 }
 
 // get the conversion mode for a given topic
 func getConvTopic(topic string) string {
 	for _, c2mp := range can2mqttPairs {
-		if c2mp.mqttTopic == topic {
+		if c2mp.mqttTopic[0] == topic {
 			return c2mp.convMethod
 		}
 	}
@@ -151,7 +179,7 @@ func getConvTopic(topic string) string {
 // get the correspondig ID for a given topic
 func getId(mqttTopic string) int {
 	for _, c2mp := range can2mqttPairs {
-		if c2mp.mqttTopic == mqttTopic {
+		if c2mp.mqttTopic[0] == mqttTopic {
 			return c2mp.canId
 		}
 	}
