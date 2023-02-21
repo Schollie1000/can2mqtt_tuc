@@ -9,7 +9,6 @@ import (
 	"os"           // open files
 	"strconv"      // parse strings
 	"sync"
-	// For bigendian ???
 )
 
 // can2mqtt is a struct that represents the internal type of
