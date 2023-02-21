@@ -211,6 +211,14 @@ func convert2MQTT(id int, length int, payload [8]byte) []string {
 		}
 		retstr = append(retstr, uint322ascii(payload[0:4])+":"+uint322ascii(payload[4:8]))
 		return retstr
+	} else if convertMethod == "motor2ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: motor msg pulk \n")
+		}
+		retstr = append(retstr, int162ascii(payload[0:2]))
+		retstr = append(retstr, int162ascii(payload[2:4]))
+		retstr = append(retstr, uint82ascii(payload[5]))
+		return retstr
 	} else if convertMethod == "setup2motor" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode setup2motor\n")
