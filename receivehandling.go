@@ -2,6 +2,7 @@ package can2mqtt_tuc
 
 import (
 	"fmt"
+
 	CAN "github.com/brendoncarroll/go-can"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
@@ -16,11 +17,11 @@ func handleCAN(cf CAN.CANFrame) {
 	}
 	mqttPayload := convert2MQTT(int(cf.ID), int(cf.Len), cf.Data)
 	if dbg {
-		fmt.Printf("receivehandler: converted String: %s\n", mqttPayload)
+		fmt.Printf("receivehandler: converted String: %s\n", mqttPayload[0])
 	}
 	topic := getTopic(int(cf.ID))
 	mqttPublish(topic, mqttPayload)
-	fmt.Printf("ID: %d len: %d data: %X -> topic: \"%s\" message: \"%s\"\n", cf.ID, cf.Len, cf.Data, topic, mqttPayload)
+	fmt.Printf("ID: %d len: %d data: %X -> topic: \"%s\" message: \"%s\"\n", cf.ID, cf.Len, cf.Data, topic[0], mqttPayload[0])
 }
 
 // handleMQTT is the standard receivehandler for MQTT
