@@ -3,8 +3,9 @@ package main
 
 import (
 	"fmt" // printfoo
+	"os"  // args
+
 	C2M "github.com/Schollie1000/can2mqtt_tuc"
-	"os" // args
 )
 
 // Parses commandline arguments
@@ -36,9 +37,10 @@ func main() {
 
 // help function (obvious...)
 func printHelp() {
+	fmt.Printf("Test Drillbotics ")
 	fmt.Printf("welcome to the CAN2MQTT Drillbotics edit bridge!\n\n")
 	fmt.Printf("Usage: can2mqtt [-f <file>] [-c <CAN-Interface>] [-m <MQTT-Connect>] [-v] [-h]\n")
 	fmt.Printf("<file>: a can2mqtt.csv file\n")
 	fmt.Printf("<CAN-Interface>: a CAN-Interface e.g. can0\n")
-        fmt.Printf("<MQTT-Connect>: connectstring for MQTT. e.g.: tcp://[user:pass@]localhost:1883\n")
+	fmt.Printf("<MQTT-Connect>: connectstring for MQTT. e.g.: tcp://[user:pass@]localhost:1883\n")
 }
