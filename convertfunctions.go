@@ -187,6 +187,13 @@ func convert2MQTT(id int, length int, payload [8]byte) []string {
 		}
 		retstr = append(retstr, int322ascii(payload[0:4]))
 		return retstr
+	} else if convertMethod == "2int322ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: db 2 int32  \n")
+		}
+		retstr = append(retstr, int322ascii(payload[0:4]))
+		retstr = append(retstr, int322ascii(payload[4:8]))
+		return retstr
 	} else if convertMethod == "float2ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: db float  \n")
