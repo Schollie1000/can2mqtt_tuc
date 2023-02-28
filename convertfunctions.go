@@ -91,6 +91,21 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[7] = tmp[7]
 		len = 8
 
+	} else if convertMethod == "int32int16" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode motor einstellung %s)\n", convertMethod)
+		}
+		nums := strings.Split(payload, " ")
+		tmp := ascii2int32(nums[0])
+		data[0] = tmp[0]
+		data[1] = tmp[1]
+		data[2] = tmp[2]
+		data[3] = tmp[3]
+		tmp = ascii2int16(nums[1])
+		data[4] = tmp[0]
+		data[5] = tmp[1]
+		len = 8
+
 	} else if convertMethod == "setup2motor" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode motor einstellung %s)\n", convertMethod)
