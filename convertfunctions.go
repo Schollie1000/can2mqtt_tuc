@@ -474,7 +474,7 @@ func setup2floats(payload string) []byte {
 	return a
 }
 
-// sadfsdfasdf
+// this really annoyws me ... Little endian
 func ascii2int16(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint16(tmp)
