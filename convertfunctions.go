@@ -474,7 +474,13 @@ func setup2floats(payload string) []byte {
 	return a
 }
 
-// this really annoyws me ... Little endian
+// this really annoyws me ... Little endian  github test
+
+func nutzlos() []byte {
+	null := make([]byte, 4)
+	return null
+}
+
 func ascii2int16(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint16(tmp)
