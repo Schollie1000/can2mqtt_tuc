@@ -93,7 +93,7 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 
 	} else if convertMethod == "int32int16" {
 		if dbg {
-			fmt.Printf("convertfunctions: using convertmode motor einstellung %s)\n", convertMethod)
+			fmt.Printf("convertfunctions: using convertmode int32int16 %s)\n", convertMethod)
 		}
 		nums := strings.Split(payload, " ")
 		tmp := ascii2int32(nums[0])
@@ -314,7 +314,7 @@ func uint162ascii(payload []byte) string {
 	if len(payload) != 2 {
 		return "Err in CAN-Frame, data must be 2 bytes."
 	}
-	data := binary.LittleEndian.Uint16(payload)
+	data := binary.BigEndian.Uint16(payload)
 	return strconv.FormatUint(uint64(data), 10)
 }
 
@@ -322,7 +322,7 @@ func ascii2uint16(payload string) []byte {
 	tmp, _ := strconv.Atoi(payload)
 	number := uint16(tmp)
 	a := make([]byte, 2)
-	binary.LittleEndian.PutUint16(a, number)
+	binary.BigEndian.PutUint16(a, number)
 	return a
 }
 
