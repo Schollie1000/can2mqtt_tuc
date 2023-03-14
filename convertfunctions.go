@@ -475,7 +475,7 @@ func setup2floats(payload string) []byte {
 }
 
 // this really annoyws me ... Little endian  github test
-
+// test function
 func nutzlos() []byte {
 	null := make([]byte, 4)
 	return null
