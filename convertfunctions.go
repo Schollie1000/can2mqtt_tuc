@@ -487,7 +487,8 @@ func int162ascii(payload []byte) string {
 	if len(payload) != 2 {
 		return "Err in CAN-Frame, data must be 2 bytes."
 	}
-	data := binary.BigEndian.Uint16(payload)
+
+	data := binary.LittleEndian.Uint16(payload)
 	data2 := int16(data)
 	return strconv.FormatInt(int64(data2), 10)
 }
