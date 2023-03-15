@@ -27,6 +27,20 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 			fmt.Printf("convertfunctions: using convertmode none (reverse of %s)\n", convertMethod)
 		}
 		data, len = ascii2bytes(payload)
+	} else if convertMethod == "empty" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode ascii2uint8 (reverse of %s)\n", convertMethod)
+		}
+		data[0] = 0
+		data[1] = 0
+		data[2] = 0
+		data[3] = 0
+		data[4] = 0
+		data[5] = 0
+		data[6] = 0
+		data[7] = 0
+
+		len = 8
 	} else if convertMethod == "uint82ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2uint8 (reverse of %s)\n", convertMethod)
