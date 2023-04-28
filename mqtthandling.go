@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"strings"
+
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
@@ -42,11 +44,11 @@ func mqttStart(suppliedString string) {
 		fmt.Printf("mqtthandler: starting connection to: %s\n", connectString)
 	}
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		fmt.Println("mqtthandler: Oh no an error occured...")
+		fmt.Println("mqttHandler: Oh no an error occurred...")
 		panic(token.Error())
 	}
 	if dbg {
-		fmt.Printf("mqtthandler: connection established!\n")
+		fmt.Printf("mqttHandler: connection established!\n")
 	}
 }
 

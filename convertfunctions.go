@@ -7,21 +7,19 @@ import (
 	"math"
 	"strconv"
 	"strings"
-
-	CAN "github.com/brendoncarroll/go-can"
 )
 
 // convert2CAN does the following:
 // 1. receive topic and payload
-// 2. use topic to examine corresponding cconvertmode and CAN-ID
+// 2. use topic to examine corresponding convertmode and CAN-ID
 // 3. execute conversion
 // 4. build CANFrame
 // 5. returning the CANFrame
-func convert2CAN(topic, payload string) CAN.CANFrame {
-	convertMethod := getConvTopic(topic)
-	var Id uint32 = uint32(getId(topic))
+func convert2CAN(topic, payload string) can.Frame {
+	convertMethod := getConvModeFromTopic(topic)
+	var Id = uint32(getIdFromTopic(topic))
 	var data [8]byte
-	var len uint32
+	var length uint8
 	if convertMethod == "none" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode none (reverse of %s)\n", convertMethod)
@@ -64,7 +62,6 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[1] = tmp[1]
 		data[2] = tmp[2]
 		data[3] = tmp[3]
-		len = 8
 	} else if convertMethod == "int322ascii" {
 		if dbg {
 			fmt.Printf("convertfunctions: using convertmode ascii2int32(reverse of %s)\n", convertMethod)
@@ -162,18 +159,27 @@ func convert2CAN(topic, payload string) CAN.CANFrame {
 		data[0] = tmp[0]
 		data[1] = tmp[1]
 		data[2] = tmp[2]
-		data[3] = tmp[3]
-
-		len = 8
-
+		len = 3
+	} else if convertMethod == "pixelbin2ascii" {
+		if dbg {
+			fmt.Printf("convertfunctions: using convertmode ascii2pixelbin(reverse of %s)\n", convertMethod)
+		}
+		num_and_color := strings.Split(payload, " ")
+		bin_num := ascii2uint8(num_and_color[0])
+		tmp := colorcode2bytecolor(num_and_color[1])
+		data[0] = byte(bin_num)
+		data[1] = tmp[0]
+		data[2] = tmp[1]
+		data[3] = tmp[2]
+		len = 4
 	} else {
 		if dbg {
 			fmt.Printf("convertfunctions: convertmode %s not found. using fallback none\n", convertMethod)
 		}
-		data, len = ascii2bytes(payload)
+		data, length = ascii2bytes(payload)
 	}
-	mycf := CAN.CANFrame{ID: Id, Len: len, Data: data}
-	return mycf
+	myFrame := can.Frame{ID: Id, Length: length, Data: data}
+	return myFrame
 }
 
 // convert2MQTT does the following
@@ -297,9 +303,9 @@ func bytes2ascii(length uint32, payload [8]byte) string {
 	return string(payload[:length])
 }
 
-func ascii2bytes(payload string) ([8]byte, uint32) {
+func ascii2bytes(payload string) ([8]byte, uint8) {
 	var returner [8]byte
-	var i uint32 = 0
+	var i uint8 = 0
 	for ; int(i) < len(payload) && i < 8; i++ {
 		returner[i] = payload[i]
 	}
@@ -319,6 +325,9 @@ func ascii2uint8(payload string) byte {
 	return ascii2uint16(payload)[0]
 }
 
+// ######################################################################
+// #			UINT162ASCII				       #
+// ######################################################################
 // ######################################################################
 // #			UINT162ASCII				       #
 // ######################################################################
@@ -396,7 +405,7 @@ func uint642ascii(payload []byte) string {
 		return "Err in CAN-Frame, data must be 8 bytes."
 	}
 	data := binary.LittleEndian.Uint64(payload)
-	return strconv.FormatUint(uint64(data), 10)
+	return strconv.FormatUint(data, 10)
 }
 
 func ascii2uint64(payload string) []byte {

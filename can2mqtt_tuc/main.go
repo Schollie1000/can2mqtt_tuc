@@ -24,6 +24,9 @@ func main() {
 		case "-f":
 			i++
 			C2M.SetC2mf(os.Args[i])
+		case "-d":
+			i++
+			C2M.SetConfDirMode(os.Args[i])
 		default:
 			i = len(os.Args)
 			conf = false
